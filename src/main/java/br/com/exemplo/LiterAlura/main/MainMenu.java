@@ -202,11 +202,15 @@ public class MainMenu {
 	private void storeBookInDB(String data) {
 		
 		Book book = getBookfromData(data);
+		Author author = getAuthorFromData(data);
+		Author searchedAuthor = repository.findAuthorByName(author.getName());
 		
 		if(book==null) {
 			System.out.println("Este livro nao existe, pesquise novamente");
 		}
 		else {
+			repository.save(book);
+			book.setAuthor(searchedAuthor==null ? author : searchedAuthor);
 			repository.save(book);
 			System.out.println("Livro "+book.getTitle()+" encontrado e guardado com sucesso!");
 		}
@@ -216,6 +220,13 @@ public class MainMenu {
 		
 		GutendexSearchData gutendexSearchData = converter.getJsonData(data, GutendexSearchData.class);
 		
-		return gutendexSearchData.count()==0 ? null : new Book(gutendexSearchData.booksData().get(0), repository);
+		return gutendexSearchData.count()==0 ? null : new Book(gutendexSearchData.booksData().get(0));
+	}
+	
+	private Author getAuthorFromData(String data) {
+		
+		GutendexSearchData gutendexSearchData = converter.getJsonData(data, GutendexSearchData.class);
+		
+		return gutendexSearchData.count()==0 ? null : new Author(gutendexSearchData.booksData().get(0).authors().get(0));
 	}
 }

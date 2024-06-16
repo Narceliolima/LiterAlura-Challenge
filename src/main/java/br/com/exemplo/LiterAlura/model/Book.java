@@ -1,6 +1,5 @@
 package br.com.exemplo.LiterAlura.model;
 
-import br.com.exemplo.LiterAlura.repository.BookRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,10 +27,8 @@ public class Book {
 	
 	public Book() {}
 
-	public Book(BookData bookData, BookRepository repository) {
+	public Book(BookData bookData) {
 		this.title = bookData.title();
-		Author author = repository.findAuthorByName(bookData.authors().get(0).name());
-		this.author = author==null ? new Author(bookData.authors().get(0)) : author;
 		this.languages = bookData.languages().get(0);
 		this.downloadCount = bookData.downloadCount();
 	}
